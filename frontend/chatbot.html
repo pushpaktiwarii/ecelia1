@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -476,6 +476,7 @@
             font-size: 16px;
             transition: all 0.3s ease;
             backdrop-filter: blur(10px);
+            position: relative;
         }
 
         .clear-chat-btn:hover {
@@ -538,6 +539,242 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        .theme-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            z-index: 10;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(180deg) scale(1.1);
+        }
+
+        .message-reactions {
+            display: flex;
+            gap: 6px;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .message:hover .message-reactions {
+            opacity: 1;
+        }
+
+        .reaction-btn {
+            background: #f1f5f9;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 4px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .reaction-btn:hover {
+            background: #e2e8f0;
+            transform: scale(1.05);
+        }
+
+        .reaction-btn.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .export-btn {
+            position: absolute;
+            top: 20px;
+            right: 70px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .export-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .pulse-ring {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(102, 126, 234, 0.6);
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .message-bubble code {
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #667eea;
+        }
+
+        .message.user .message-bubble code {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background: #667eea;
+            position: absolute;
+            animation: confettiFall 3s linear forwards;
+            z-index: 9999;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 700;
+            animation: bounce 0.5s ease;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .smooth-fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        .chatbot-container.dark-mode {
+            background: #1e293b;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .chat-header.dark-mode {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+        }
+
+        .dark-mode .chat-messages {
+            background: #0f172a;
+        }
+
+        .dark-mode .message.bot .message-bubble {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-color: #334155;
+        }
+
+        .dark-mode .message.user .message-bubble {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .dark-mode .welcome-message {
+            color: #94a3b8;
+        }
+
+        .dark-mode .input-wrapper {
+            background: #1e293b;
+            border-color: #334155;
+        }
+
+        .dark-mode .input-wrapper:focus-within {
+            background: #1e293b;
+            border-color: #667eea;
+        }
+
+        .dark-mode .message-input {
+            color: #e2e8f0;
+        }
+
+        .dark-mode .message-input::placeholder {
+            color: #64748b;
+        }
+
+        .dark-mode .reaction-btn {
+            background: #1e293b;
+            border-color: #334155;
+            color: #e2e8f0;
+        }
+
+        .dark-mode .reaction-btn:hover {
+            background: #334155;
+        }
+
+        .dark-mode .message-bubble code {
+            background: #0f172a;
+            color: #818cf8;
+        }
+
         /* Mobile Responsive */
         @media (max-width: 480px) {
             body {
@@ -584,12 +821,17 @@
     <div class="chatbot-container">
         <div class="chat-header">
             <button class="clear-chat-btn" onclick="clearChat()" title="Clear Chat">🗑️</button>
+            <button class="export-btn" onclick="exportChat()" title="Export Chat">💾</button>
+            <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme" id="themeToggle">🌙</button>
             <div class="status-indicator">
                 <div class="status-dot"></div>
                 <span>Connecting...</span>
             </div>
             <div class="message-count-badge" id="messageCount">0 messages</div>
-            <div class="bot-avatar">🤖</div>
+            <div class="bot-avatar">
+                🤖
+                <div class="pulse-ring"></div>
+            </div>
             <div class="chat-title">Ecelia</div>
             <div class="chat-subtitle">E-Cell UCER Assistant</div>
         </div>

@@ -40,9 +40,10 @@ function copyMessage(text) {
 }
 
 // Show copy toast notification
-function showCopyToast() {
+function showCopyToast(message) {
     const toast = document.getElementById('copyToast');
     if (toast) {
+        toast.textContent = message || 'Message copied! 📋';
         toast.classList.add('show');
         setTimeout(() => {
             toast.classList.remove('show');
@@ -109,6 +110,33 @@ function addMessage(content, isUser = false) {
     copyBtn.title = 'Copy message';
     copyBtn.onclick = () => copyMessage(plainText);
     actionsDiv.appendChild(copyBtn);
+    
+    // Add message reactions (only for bot messages)
+    if (!isUser) {
+        const reactionsDiv = document.createElement('div');
+        reactionsDiv.className = 'message-reactions';
+        
+        const likeBtn = document.createElement('button');
+        likeBtn.className = 'reaction-btn';
+        likeBtn.innerHTML = '👍';
+        likeBtn.onclick = (e) => {
+            e.stopPropagation();
+            likeBtn.classList.toggle('active');
+            createConfetti();
+        };
+        
+        const dislikeBtn = document.createElement('button');
+        dislikeBtn.className = 'reaction-btn';
+        dislikeBtn.innerHTML = '👎';
+        dislikeBtn.onclick = (e) => {
+            e.stopPropagation();
+            dislikeBtn.classList.toggle('active');
+        };
+        
+        reactionsDiv.appendChild(likeBtn);
+        reactionsDiv.appendChild(dislikeBtn);
+        bubbleDiv.appendChild(reactionsDiv);
+    }
     
     const timeDiv = document.createElement('div');
     timeDiv.className = 'message-time';
@@ -228,12 +256,92 @@ function clearChat() {
     }
 }
 
+// Export chat function
+function exportChat() {
+    const messages = document.querySelectorAll('.message');
+    let chatText = 'Ecelia Chat Export\n';
+    chatText += '='.repeat(50) + '\n\n';
+    
+    messages.forEach(msg => {
+        const isUser = msg.classList.contains('user');
+        const bubble = msg.querySelector('.message-bubble');
+        const time = msg.querySelector('.message-time')?.textContent || '';
+        const text = bubble?.textContent || bubble?.innerText || '';
+        
+        if (text.trim()) {
+            chatText += `[${time}] ${isUser ? 'You' : 'Ecelia'}: ${text}\n\n`;
+        }
+    });
+    
+    const blob = new Blob([chatText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `ecelia-chat-${new Date().toISOString().split('T')[0]}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    
+    showCopyToast('Chat exported! 💾');
+}
+
+// Toggle theme function
+function toggleTheme() {
+    const body = document.body;
+    const container = document.querySelector('.chatbot-container');
+    const messages = document.querySelector('.chat-messages');
+    const header = document.querySelector('.chat-header');
+    const toggle = document.getElementById('themeToggle');
+    
+    body.classList.toggle('dark-mode');
+    container.classList.toggle('dark-mode');
+    if (messages) messages.classList.toggle('dark-mode');
+    if (header) header.classList.toggle('dark-mode');
+    
+    if (body.classList.contains('dark-mode')) {
+        toggle.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+    } else {
+        toggle.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+    }
+}
+
+// Create confetti animation
+function createConfetti() {
+    const colors = ['#667eea', '#764ba2', '#f093fb', '#4ade80', '#fbbf24'];
+    for (let i = 0; i < 20; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => confetti.remove(), 3000);
+    }
+}
+
+
 // Initialize
 window.addEventListener('load', async () => {
     messageInput.focus();
     scrollToBottom();
     updateCharCounter();
     updateMessageCount();
+    
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        const container = document.querySelector('.chatbot-container');
+        const messages = document.querySelector('.chat-messages');
+        const header = document.querySelector('.chat-header');
+        if (container) container.classList.add('dark-mode');
+        if (messages) messages.classList.add('dark-mode');
+        if (header) header.classList.add('dark-mode');
+        const toggle = document.getElementById('themeToggle');
+        if (toggle) toggle.textContent = '☀️';
+    }
     
     // Check connection status
     await checkConnection();
@@ -257,3 +365,6 @@ window.handleKeyPress = handleKeyPress;
 window.adjustTextarea = adjustTextarea;
 window.clearChat = clearChat;
 window.copyMessage = copyMessage;
+window.exportChat = exportChat;
+window.toggleTheme = toggleTheme;
+window.createConfetti = createConfetti;
